@@ -1,0 +1,46 @@
+{
+  "name": "hello_world",
+  "version": "1.0.0",
+  "description": "hello world sample for NodeJS",
+  "main": "src/index.js",
+  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
+  "author": "SAM CLI",
+  "license": "MIT",
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.64",
+    "@types/http-status-codes": "^1.2.0",
+    "@types/jest": "^26.0.15",
+    "@types/mongoose": "^5.7.37",
+    "@types/node": "^10.17.28",
+    "aws-sdk": "^2.785.0",
+    "axios": "^0.18.0",
+    "http-status-codes": "^2.1.4",
+    "mongoose": "^5.10.12",
+    "querystring": "^0.2.0",
+    "reflect-metadata": "^0.1.13",
+    "winston": "^3.3.3"
+  },
+  "scripts": {
+    "prebuild": "rm -rf ../dist && mkdirp ../dist || true",
+    "build-watch": "npm run prebuild && npm run copy-dependencies && tsc -w --preserveWatchOutput true",
+    "build": "npm run prebuild && npm run copy-dependencies && tsc",
+    "copy-dependencies": "cpx \"./node_modules/**/*\" ../dist/node_modules",
+    "test": "npx jest --runInBand --detectOpenHandles --colors --verbose --reporters=default",
+    "test:ci": "npx jest --ci --runInBand --silent --colors --coverage",
+    "start-api": "concurrently --kill-others --kill-others-on-fail \"npm run build-watch\" \"sam local start-api --template ../template.yaml\"",
+    "start-api-local": "concurrently --kill-others --kill-others-on-fail \"npm run build-watch\" \" cd ../ && yarn local\""
+  },
+  "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.3",
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.1.2",
+    "concurrently": "^4.1.2",
+    "cpx": "^1.5.0",
+    "jest": "^26.6.3",
+    "mkdirp": "^0.5.5",
+    "ts-jest": "^26.4.3",
+    "ts-node": "^8.10.2",
+    "typescript": "^4.0.5"
+  }
+}

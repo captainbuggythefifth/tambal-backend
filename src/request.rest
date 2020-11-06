@@ -1,0 +1,11 @@
+POST http://localhost:3000/medicine
+
+{
+    "brandName": "Brand Name",
+    "owner": "alalalaj",
+    "genericName": "Generic Name",
+    "metrology": {
+        "weight": 20,
+        "measurement": "mg"
+    }
+}
