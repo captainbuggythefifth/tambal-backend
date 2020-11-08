@@ -9,7 +9,7 @@ const connect = () => {
             return false
         }
 
-        const result = await ksmManager(process.env.SM_MONGO);
+        const result = await ksmManager(process.env.SM_MONGO.toLowerCase());
 
         if (!result.secret) {
             return false
@@ -34,6 +34,11 @@ const connect = () => {
     mongoose.connection.on('disconnected', connect);
 };
 
+const disconnect = () => {
+    mongoose.disconnect()
+}
+
 export {
-    connect
+    connect,
+    disconnect
 }

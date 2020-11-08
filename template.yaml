@@ -17,20 +17,22 @@ Globals:
     Runtime: nodejs12.x
     Environment:
       Variables:
-        SM_MONGO: development/tambal/mongodb
+        SM_MONGO: !Sub "${Stage}/tambal/mongodb"
   Api:
     Cors:
-      AllowMethods: "'OPTIONS,PUT'"
+      AllowMethods: "'OPTIONS'"
       AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
       AllowOrigin: "'*'"
 
 Resources:
+
+  # Start of Medicines
   MedicineGetByIDFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: dist/
       Handler: medicine.findByID
-      FunctionName: MedicinesGetByIDFunctionName
+      FunctionName: !Sub "${Stage}-MedicinesGetByIDFunctionName"
       Policies:
         - SecretsManagerReadWrite
       Events:
@@ -46,7 +48,7 @@ Resources:
     Properties:
       CodeUri: dist/
       Handler: medicine.create
-      FunctionName: MedicineCreateFunctionName
+      FunctionName: !Sub "${Stage}-MedicineCreateFunctionName"
       Policies:
         - SecretsManagerReadWrite
       Events:
@@ -54,7 +56,23 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             Path: /medicine
-            Method: post
+            Method: POST
+            RestApiId: !Ref ApiDeployment
+
+  MedicineUpdateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: medicine.update
+      FunctionName: !Sub "${Stage}-MedicineUpdateFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Post:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /medicine/{id}
+            Method: PUT
             RestApiId: !Ref ApiDeployment
 
   MedicinesGetFunction:
@@ -62,7 +80,7 @@ Resources:
     Properties:
       CodeUri: dist/
       Handler: medicine.find
-      FunctionName: MedicinesGetFunctionName
+      FunctionName: !Sub "${Stage}-MedicinesGetFunctionName"
       Policies:
         - SecretsManagerReadWrite
       Events:
@@ -72,6 +90,75 @@ Resources:
             Path: /medicines
             Method: GET
             RestApiId: !Ref ApiDeployment
+
+  # End of Medicines
+
+  # Start of Maintenance
+  MaintenanceGetByIDFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: maintenance.findByID
+      FunctionName: !Sub "${Stage}-MaintenanceGetByIDFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Get:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /maintenance/{id}
+            Method: GET
+            RestApiId: !Ref ApiDeployment
+
+  MaintenanceCreateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: maintenance.create
+      FunctionName: !Sub "${Stage}-MaintenanceCreateFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Post:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /maintenance
+            Method: POST
+            RestApiId: !Ref ApiDeployment
+
+  MaintenanceUpdateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: maintenance.update
+      FunctionName: !Sub "${Stage}-MaintenanceUpdateFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Post:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /maintenance/{id}
+            Method: PUT
+            RestApiId: !Ref ApiDeployment
+
+  MaintenancesGetFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: maintenance.find
+      FunctionName: !Sub "${Stage}-MaintenancesGetFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Get:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /maintenances
+            Method: GET
+            RestApiId: !Ref ApiDeployment
+
+  # End of Maintenance
 
   ApiDeployment:
     Type: AWS::Serverless::Api

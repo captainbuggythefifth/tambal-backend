@@ -1,22 +1,23 @@
 'use strict';
 
 import { StatusCodes } from 'http-status-codes';
-import { create, find } from '../medicine';
+import { create } from './../../../maintenance';
 
 let event, context;
 
 describe('Medicine create', function () {
     
-    const failResponse = {"body": "Must have body", "statusCode": 400};
-
     const data = {
-        "brandName": "Brand Name",
-        "owner": "alalalaj",
-        "genericName": "Generic Name",
-        "metrology": {
-            "weight": 20,
-            "measurement": "mg"
-        }
+        "owner": "5f914cbebf8d7d00082ad7b6",
+        "medicines": [
+            "5fa79e19cb1400d0b0495a3e"
+        ],
+        "stocks": 12,
+        "schedule": {
+            frequency: 8,
+            every: "H"
+        },
+        "startsIn": new Date().toISOString(),
     };
 
     beforeEach(() => {
@@ -29,8 +30,6 @@ describe('Medicine create', function () {
         event = {};
         const result = await create(event);
         expect(result.statusCode).toEqual(StatusCodes.BAD_REQUEST);
-        expect(result).toEqual(failResponse)
-
     });
 
     it('should fail when there is missing required from body', async () => {
@@ -40,12 +39,11 @@ describe('Medicine create', function () {
             brandName: ''
         });
         expect(result.statusCode).toEqual(StatusCodes.BAD_REQUEST);
-
     });
 
     it('should succeed', async () => {
         const result = await create(event);
-        expect(result.statusCode).toEqual(StatusCodes.OK);
+        expect(result.statusCode).toEqual(StatusCodes.CREATED);
     });
     
 });

@@ -9,3 +9,16 @@ POST http://localhost:3000/medicine
         "measurement": "mg"
     }
 }
+
+###
+PUT http://localhost:3000/medicine/5fa685b5a301888f24a821fb
+
+{
+    "brandName": "Brand Name",
+    "owner": "alalah",
+    "genericName": "Generic Name",
+    "metrology": {
+        "weight": 10,
+        "measurement": "mg"
+    }
+}

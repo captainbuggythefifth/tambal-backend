@@ -3,12 +3,12 @@ import {
     APIGatewayProxyResult
 } from "aws-lambda";
 import { StatusCodes } from 'http-status-codes';
-import { Medicine } from './models/medicine';
+import { Maintenance } from './models/maintenance';
 import { bodyParser } from './utils/body-parser';
 import { validateParameters } from "./utils/validate-parameters";
 import { validateMongooseID } from "./utils/validate-mongoose-id";
 import { lambdaResponse } from "./utils/lambda-response";
-import MedicineController from './controllers/medicine';
+import MaintenanceController from './controllers/maintenance';
 
 import { connect, disconnect } from './connect';
 import { assignDefaultEventQueryStringParameters } from "./utils/assign-default-querystring-parameters";
@@ -20,13 +20,13 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
     // required parameters
     const parameters = [
         'owner',
-        'genericName',
-        'brandName',
-        'metrology',
+        'stocks',
+        'medicines',
+        'schedule'
     ];
 
     // must parse the body. If run locally, event.body is in json format; otherwise it is string
-    const body = bodyParser<Medicine>(event);
+    const body = bodyParser<Maintenance>(event);
 
     // must reject the request if the body is not present
     if (!body) {
@@ -46,14 +46,28 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
         });
     }
 
-    const medicine = await MedicineController.create(body);
-    
-    disconnect();
+    // validate medicines
+    if (!Array.isArray(body.medicines)) {
+        return lambdaResponse({
+            statusCode: StatusCodes.BAD_REQUEST,
+            message: 'medicines must be array'
+        });
+    }
+
+    // validate schedule
+    if (!body.schedule.every || !body.schedule.frequency) {
+        return lambdaResponse({
+            statusCode: StatusCodes.BAD_REQUEST,
+            message: 'schedule must be in { every: string, frequency: number }'
+        });
+    }
+
+    const maintenance = await MaintenanceController.create(body);
 
     return lambdaResponse({
         statusCode: StatusCodes.CREATED,
         message: 'Successfully created',
-        data: medicine
+        data: maintenance
     });
 };
 
@@ -62,23 +76,23 @@ export async function find(event: APIGatewayProxyEvent): Promise<APIGatewayProxy
     // must assign the default parameters and override if event.queryStringParameters are present
     const parameters = assignDefaultEventQueryStringParameters(event)
 
-    const medicines = await MedicineController.find(parameters);
+    const maintenances = await MaintenanceController.find(parameters);
 
     disconnect();
-
+    
     return lambdaResponse({
         statusCode: StatusCodes.OK,
-        message: 'Medicines',
-        data: medicines,
+        message: 'maintenances',
+        data: maintenances,
         page: parameters.page,
         limit: parameters.limit
     });
 };
 
 export async function findByID(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    
+
     // validate id from event.pathParameters
-    const id = assignEventPathParameters('id', event)
+    const id = assignEventPathParameters('id', event);
 
     if (!id) {
         return lambdaResponse({
@@ -97,26 +111,26 @@ export async function findByID(event: APIGatewayProxyEvent): Promise<APIGatewayP
         });
     }
 
-    const medicine = await MedicineController.findById(id);
+    const maintenance = await MaintenanceController.findById(id);
 
-    disconnect();
-
-    if (!medicine) {
+    if (!maintenance) {
         return lambdaResponse({
             statusCode: StatusCodes.NOT_FOUND,
             message: 'No match'
         });
     }
 
+    disconnect()
+
     return lambdaResponse({
         statusCode: StatusCodes.OK,
-        message: 'Medicine',
-        data: medicine,
+        message: 'maintenance',
+        data: maintenance,
     });
 };
 
 export async function update(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    
+
     // validate id from event.pathParameters
     const id = assignEventPathParameters('id', event);
 
@@ -136,8 +150,9 @@ export async function update(event: APIGatewayProxyEvent): Promise<APIGatewayPro
         });
     }
 
-    const body = bodyParser<Medicine>(event);
+    const body = bodyParser<Maintenance>(event);
 
+    // must reject the request if the body is not present
     if (!body) {
         return lambdaResponse({
             statusCode: StatusCodes.BAD_REQUEST,
@@ -146,19 +161,19 @@ export async function update(event: APIGatewayProxyEvent): Promise<APIGatewayPro
     }
 
     // must validate if the ID passed is legit
-    const medicine = await MedicineController.findById(id);
+    const maintenance = await MaintenanceController.findById(id);
 
-    if (!medicine) {
+    if (!maintenance) {
         return lambdaResponse({
             statusCode: StatusCodes.NOT_FOUND,
             message: 'No match'
         });
     }
 
-    const updated = await MedicineController.update(id, body);
+    const updated = await MaintenanceController.update(id, body);
 
-    disconnect();
-    
+    disconnect()
+
     return lambdaResponse({
         statusCode: StatusCodes.OK,
         message: 'Successfully updated',

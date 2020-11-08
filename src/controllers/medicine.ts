@@ -54,9 +54,47 @@ async function find(options: MedicineFindOptions): Promise<MedicineDocument[]> {
 }
 
 async function findById(id: string): Promise<MedicineDocument | null> {
-  
+
   return await MedicineModel
     .findById(id)
+    .then((data: MedicineDocument | null) => {
+      return data;
+    })
+    .catch((error: Error) => {
+      throw error;
+    });
+}
+
+async function update(_id: string, medicine: Medicine): Promise<MedicineDocument | null> {
+
+  let query = {
+    owner: medicine.owner ? medicine.owner : undefined,
+    genericName: medicine.genericName ? medicine.genericName : undefined,
+    brandName: medicine.brandName ? medicine.brandName : undefined,
+    metrology: medicine.metrology ? medicine.metrology : undefined
+  };
+
+  if (!query.brandName) {
+    delete query.brandName
+  }
+
+  if (!query.owner) {
+    delete query.owner
+  }
+
+  if (!query.genericName) {
+    delete query.genericName
+  }
+
+  if (!query.metrology) {
+    delete query.metrology
+  }
+
+  const result = await MedicineModel.updateOne({ _id: _id }, { $set: query });
+  console.log("result: ", result);
+  
+  return await MedicineModel
+    .updateOne({ _id: _id }, { $set: query })
     .then((data: MedicineDocument | null) => {
       return data;
     })
@@ -68,5 +106,6 @@ async function findById(id: string): Promise<MedicineDocument | null> {
 export default {
   create,
   find,
-  findById
+  findById,
+  update
 };

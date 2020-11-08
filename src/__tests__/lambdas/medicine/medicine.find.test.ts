@@ -2,7 +2,7 @@
 
 import { StatusCodes } from 'http-status-codes';
 import querystring from 'querystring';
-import { find } from './../medicine';
+import { find } from './../../../medicine';
 
 let event, context;
 
@@ -22,14 +22,17 @@ describe('Medicine find', function () {
         };
     });
 
-    it('should succeed', async () => {
+    it('should succeed in getting records', async () => {
         event = {};
+        // should get all
         const result = await find(event);
         expect(result.statusCode).toEqual(StatusCodes.OK);
     });
 
-    it('should succeed', async () => {
+    it('should succeed in getting queried records', async () => {
         const result = await find(event);
+        console.log("result: ", result);
+        
         expect(result.statusCode).toEqual(StatusCodes.OK);
     });
     

@@ -2,14 +2,14 @@
 
 import { StatusCodes } from 'http-status-codes';
 import querystring from 'querystring';
-import { findByID } from './../medicine';
+import { findByID } from './../../../medicine';
 
 let event, context;
 
 describe('Medicine findByID', function () {
 
     const data = {
-        "id": "5fa3b316fe0ad0000eec50c1",
+        "id": "5fa685b5a301888f24a821fb",
     };
 
     const qs = querystring.stringify(data);
@@ -43,7 +43,7 @@ describe('Medicine findByID', function () {
         const result = await findByID({
             ...event,
             pathParameters: {
-                id: "5fa3b316fe0ad0000eec50c2"
+                id: "5fa685b5a301888f24a821f2"
             }
         });
         expect(result.statusCode).toEqual(StatusCodes.NOT_FOUND);

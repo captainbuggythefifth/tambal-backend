@@ -7,7 +7,7 @@ export enum Measurement {
     G = 'G'
 }
 
-export interface Medicine extends MedicineDocument{
+export interface Medicine extends MedicineDocument {
     owner: string,
     genericName: string,
     brandName: string,
@@ -20,11 +20,11 @@ export interface Metrology extends MetrologyDocument {
 }
 
 export interface MetrologyDocument extends Document {
-    
+
 }
 
 export interface MedicineDocument extends Document {
-    
+
 }
 
 const MedicineSchema: Schema = new Schema({
@@ -32,9 +32,11 @@ const MedicineSchema: Schema = new Schema({
     genericName: { type: String, required: true },
     brandName: { type: String, required: true },
     metrology: {
-        weight: { type: String, required: true },
+        weight: { type: Number, required: true },
         measurement: { type: String, required: true, enum: Object.values(Measurement) },
-    }
+    },
+}, {
+    timestamps: true
 });
 
 // Export the model and return your IUser interface
