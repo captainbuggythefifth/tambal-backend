@@ -22,9 +22,10 @@
   },
   "scripts": {
     "prebuild": "rm -rf ../dist && mkdirp ../dist || true",
-    "build-watch": "npm run prebuild && npm run copy-dependencies && tsc -w --preserveWatchOutput true",
+    "build-watch": "npm run prebuild && npm run copy-dependencies && npm run copy-package-json && tsc -w --preserveWatchOutput true",
     "build": "npm run prebuild && npm run copy-dependencies && tsc",
     "copy-dependencies": "cpx \"./node_modules/**/*\" ../dist/node_modules",
+    "copy-package-json": "cp package.json ../dist",
     "test": "npx jest --runInBand --detectOpenHandles --colors --verbose --reporters=default",
     "test:ci": "npx jest --ci --runInBand --silent --colors --coverage",
     "start-api": "concurrently --kill-others --kill-others-on-fail \"npm run build-watch\" \"sam local start-api --template ../template.yaml\"",

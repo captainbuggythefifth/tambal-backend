@@ -1,10 +1,10 @@
 {
-    "name": "tambal-api",
+    "name": "tambal-api-backend",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "config": {
-      "stackName": "tambal-api-stack",
+      "stackName": "tambal-api-backend-stack",
       "bucketName": "tambal-api-bucket",
       "regionName": "ap-southeast-1",
       "profileName": "gau",

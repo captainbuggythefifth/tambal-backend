@@ -16,7 +16,7 @@ import { assignEventPathParameters } from "./utils/assign-event-pathparameters";
 connect();
 
 export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    
+
     // required parameters
     const parameters = [
         'owner',
@@ -72,18 +72,19 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
 };
 
 export async function find(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
-    
+
     // must assign the default parameters and override if event.queryStringParameters are present
     const parameters = assignDefaultEventQueryStringParameters(event)
 
     const maintenances = await MaintenanceController.find(parameters);
 
     disconnect();
-    
+
     return lambdaResponse({
         statusCode: StatusCodes.OK,
         message: 'maintenances',
         data: maintenances,
+        // data: finalItems,
         page: parameters.page,
         limit: parameters.limit
     });
