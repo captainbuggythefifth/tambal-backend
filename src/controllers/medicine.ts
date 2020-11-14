@@ -1,4 +1,4 @@
-import MedicineModel, { Medicine, MedicineDocument } from '../models/medicine';
+import MedicineModel, { Medicine, MedicineDocument } from './../models/medicine';
 
 interface FindOptions {
   page: number,

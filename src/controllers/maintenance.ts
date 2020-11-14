@@ -1,5 +1,5 @@
 import { assignQuery } from './../utils/assign-query';
-import MaintenanceModel, { Maintenance, MaintenanceDocument } from '../models/maintenance';
+import MaintenanceModel, { Maintenance, MaintenanceDocument } from './../models/maintenance';
 import { FindOptions } from './../interfaces/find-options';
 
 interface MaintenanceFindOptions extends FindOptions {

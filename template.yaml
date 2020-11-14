@@ -160,6 +160,71 @@ Resources:
 
   # End of Maintenance
 
+  # Start of Patient
+  PatientGetByIDFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: patient.findByID
+      FunctionName: !Sub "${Stage}-PatientGetByIDFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Get:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /patient/{id}
+            Method: GET
+            RestApiId: !Ref ApiDeployment
+
+  PatientCreateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: patient.create
+      FunctionName: !Sub "${Stage}-PatientCreateFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Post:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /patient
+            Method: POST
+            RestApiId: !Ref ApiDeployment
+
+  PatientUpdateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: patient.update
+      FunctionName: !Sub "${Stage}-PatientUpdateFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Post:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /patient/{id}
+            Method: PUT
+            RestApiId: !Ref ApiDeployment
+
+  PatientssGetFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: patient.find
+      FunctionName: !Sub "${Stage}-PatientsGetFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Get:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /patients
+            Method: GET
+            RestApiId: !Ref ApiDeployment
+
   ApiDeployment:
     Type: AWS::Serverless::Api
     Properties:
