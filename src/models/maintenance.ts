@@ -1,6 +1,9 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
+import { Status } from './common';
 import './medicine';
+import './user';
 import { MedicineDocument } from './medicine'
+import { UserDocument } from './user';
 
 
 export interface Schedule {
@@ -9,12 +12,13 @@ export interface Schedule {
 }
 
 export interface Maintenance extends MaintenanceDocument {
-    owner: string,
+    owner: UserDocument['_id'],
     stocks: number,
-    medicines: [MedicineDocument['_id']],
+    medicines: MedicineDocument['_id'][],
     schedule: Schedule,
     startsIn: string,
-    endsIn: string
+    endsIn: string,
+    status: Status
 }
 
 export interface MaintenanceDocument extends Document {
@@ -22,7 +26,10 @@ export interface MaintenanceDocument extends Document {
 }
 
 const MaintenanceSchema: Schema = new Schema<Maintenance>({
-    owner: { type: String, required: true },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
     stocks: {
         type: Number
     },
@@ -39,6 +46,11 @@ const MaintenanceSchema: Schema = new Schema<Maintenance>({
     },
     endsIn: {
         type: String
+    },
+    status: {
+        type: String,
+        enum: Object.values(Status),
+        default: "ACTIVE"
     }
 }, {
     timestamps: true

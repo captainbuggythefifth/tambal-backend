@@ -5,7 +5,7 @@ export interface FindOptions {
     sortBy: string
 }
 
-export const findOptionsDefaultParameters: FindOptions  = {
+export const findOptionsDefaultParameters = {
     page: 0,
     limit: 10,
     orderBy: 'createdAt',

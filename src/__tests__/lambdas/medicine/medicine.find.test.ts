@@ -10,7 +10,7 @@ describe('Medicine find', function () {
     
     const data = {
         "brandName": "Brand Name",
-        "owner": "alalalaj",
+        "owner": "5fafc06f0d71f6000fd71a04",
         "genericName": "Generic Name",
     };
 

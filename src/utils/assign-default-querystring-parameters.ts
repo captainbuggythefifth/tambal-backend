@@ -1,8 +1,10 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { findOptionsDefaultParameters } from "./../interfaces/find-options";
+import { FindOptions, findOptionsDefaultParameters } from "./../interfaces/find-options";
 import { validateEventQueryStringNumber } from "./validate-event-querystring-number";
 
-const assignDefaultEventQueryStringParameters = (event: APIGatewayProxyEvent) => {
+const assignDefaultEventQueryStringParameters = (event: APIGatewayProxyEvent): FindOptions => {
+    // type Result<T> = DefaultEventQueryStringParameter
+    
     const defaultParameters = findOptionsDefaultParameters;
 
     let parameters = {

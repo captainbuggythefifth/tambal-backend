@@ -14,7 +14,7 @@ describe('Medicine update', function () {
 
     const medicine = {
         "brandName": "Brand Names",
-        "owner": "alalalaj",
+        "owner": "5fafc06f0d71f6000fd71a04",
         "genericName": "Generic Names",
         "metrology": {
             "weight": 20,

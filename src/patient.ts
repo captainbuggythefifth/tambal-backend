@@ -13,9 +13,14 @@ import PatientController from './controllers/patient';
 import { connect, disconnect } from './connect';
 import { assignDefaultEventQueryStringParameters } from "./utils/assign-default-querystring-parameters";
 import { assignEventPathParameters } from "./utils/assign-event-pathparameters";
-
+import { FindOptions } from "./interfaces/find-options";
 
 connect();
+
+interface PatientFind extends FindOptions {
+    owner: string,
+    patient: string,
+}
 
 export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
 
@@ -66,6 +71,8 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
     const maintenance = await PatientController.create(body);
 
+    disconnect();
+
     return lambdaResponse({
         statusCode: StatusCodes.CREATED,
         message: 'Successfully created',
@@ -76,11 +83,35 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
 export async function find(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
 
     // must assign the default parameters and override if event.queryStringParameters are present
-    const parameters = assignDefaultEventQueryStringParameters(event)
+    const parameters = assignDefaultEventQueryStringParameters(event) as PatientFind;
+
+    // if parameters.owner has value, we must check if mongoose format Object ID
+    if (parameters.owner && parameters.owner !== null) {
+        const isValid = validateMongooseID(parameters.owner);
+
+        if (!isValid) {
+            return lambdaResponse({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: 'owner is not valid'
+            });
+        }
+    }
+
+    // if parameters.patient has value, we must check if mongoose format Object ID
+    if (parameters.patient && parameters.patient !== null) {
+        const isValid = validateMongooseID(parameters.patient);
+
+        if (!isValid) {
+            return lambdaResponse({
+                statusCode: StatusCodes.BAD_REQUEST,
+                message: 'patient is not valid'
+            });
+        }
+    }
 
     const patients = await PatientController.find(parameters);
 
-    // disconnect();
+    disconnect();
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,
@@ -123,7 +154,7 @@ export async function findByID(event: APIGatewayProxyEvent): Promise<APIGatewayP
         });
     }
 
-    // disconnect()
+    disconnect()
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,
@@ -175,7 +206,7 @@ export async function update(event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
     const updated = await PatientController.update(id, body);
 
-    // disconnect()
+    disconnect()
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,

@@ -10,13 +10,13 @@ let event, context;
 describe('Patient find', function () {
     
     const data = {
-        "owner": "5f914cbebf8d7d00082ad7b6",
-        "patient": "5f914cbebf8d7d00082ad7b6",
+        "owner": "5fafc06f0d71f6000fd71a04",
+        "patient": "5fafc06f0d71f6000fd71a04",
     };
 
     const qs = querystring.stringify(data);
 
-    beforeEach(() => {
+    beforeEach(async () => {
         event = {
             queryStringParameters: data
         };

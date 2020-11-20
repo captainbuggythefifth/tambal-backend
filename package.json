@@ -1,22 +1,24 @@
 {
-    "name": "tambal-api-backend",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "config": {
-      "stackName": "tambal-api-backend-stack",
-      "bucketName": "tambal-api-bucket",
-      "regionName": "ap-southeast-1",
-      "profileName": "gau",
-      "parameterOverrides": "\"ParameterKey=Stage,ParameterValue=Development\""
-    },
-    "scripts": {
-      "local": "rm -rf .aws-sam && sam local start-api --profile $npm_package_config_profileName",
-      "deploy": "sam build --region $npm_package_config_regionName --profile $npm_package_config_profileName && sam package --template-file template.yaml --s3-bucket $npm_package_config_bucketName --output-template-file packaged.yaml --profile $npm_package_config_profileName && sam deploy --region $npm_package_config_regionName --template-file packaged.yaml --stack-name $npm_package_config_stackName --capabilities CAPABILITY_IAM --profile $npm_package_config_profileName --parameter-overrides $npm_package_config_parameterOverrides && aws cloudformation describe-stacks --stack-name $npm_package_config_stackName --region $npm_package_config_regionName --profile $npm_package_config_profileName --query 'Stacks[].Outputs'",
-      "describe": "aws cloudformation describe-stacks --region $npm_package_config_regionName --profile $npm_package_config_profileName --stack-name $npm_package_config_stackName --query 'Stacks[].Outputs'"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {}
+  "name": "tambal-api-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "stackName": "tambal-api-backend-stack",
+    "bucketName": "tambal-api-bucket",
+    "regionName": "ap-southeast-1",
+    "profileName": "gau",
+    "parameterOverrides": "\"ParameterKey=Stage,ParameterValue=Development\""
+  },
+  "scripts": {
+    "local": "rm -rf .aws-sam && sam local start-api --profile $npm_package_config_profileName",
+    "deploy": "sam build --region $npm_package_config_regionName --profile $npm_package_config_profileName && sam package --template-file template.yaml --s3-bucket $npm_package_config_bucketName --output-template-file packaged.yaml --profile $npm_package_config_profileName && sam deploy --region $npm_package_config_regionName --template-file packaged.yaml --stack-name $npm_package_config_stackName --capabilities CAPABILITY_IAM --profile $npm_package_config_profileName --parameter-overrides $npm_package_config_parameterOverrides && aws cloudformation describe-stacks --stack-name $npm_package_config_stackName --region $npm_package_config_regionName --profile $npm_package_config_profileName --query 'Stacks[].Outputs'",
+    "describe": "aws cloudformation describe-stacks --region $npm_package_config_regionName --profile $npm_package_config_profileName --stack-name $npm_package_config_stackName --query 'Stacks[].Outputs'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "crypto": "^1.0.1"
   }
+}

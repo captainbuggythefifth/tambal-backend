@@ -27,8 +27,8 @@ async function find(options: PatientFindOptions): Promise<PatientDocument[]> {
         'patient',
     ];
 
-    let query = assignQuery(structure, options)
-
+    const query = assignQuery(structure, options)
+    
     return await PatientModel
         .find(query)
         .skip(options.page * options.limit)
@@ -37,6 +37,9 @@ async function find(options: PatientFindOptions): Promise<PatientDocument[]> {
             [options.orderBy]: options.sortBy
         })
         .populate('maintainances')
+        .populate('organizers')
+        .populate('patient')
+        .populate('owner')
         .exec()
         .then((data: PatientDocument[]) => {
             return data;

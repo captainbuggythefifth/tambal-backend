@@ -2,7 +2,7 @@ POST http://localhost:3000/medicine
 
 {
     "brandName": "Brand Name",
-    "owner": "alalalaj",
+    "owner": "5fafc06f0d71f6000fd71a04",
     "genericName": "Generic Name",
     "metrology": {
         "weight": 20,
@@ -22,3 +22,7 @@ PUT http://localhost:3000/medicine/5fa685b5a301888f24a821fb
         "measurement": "mg"
     }
 }
+
+
+###
+POST http://localhost:3000/patients

@@ -1,13 +1,16 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
+import { Status } from './common';
 import './maintenance';
-import { MaintenanceDocument } from './maintenance'
-
+import './user';
+import { MaintenanceDocument } from './maintenance';
+import { UserDocument } from './user'
 
 export interface Patient extends PatientDocument {
-    owner: string,
-    organizers: string[]
-    patient: string,
-    maintenances: MaintenanceDocument['_id'][]
+    owner: UserDocument['_id'],
+    organizers: UserDocument['_id'][]
+    patient: UserDocument['_id'],
+    maintenances: MaintenanceDocument['_id'][],
+    status: Status
 }
 
 export interface PatientDocument extends Document {
@@ -15,17 +18,27 @@ export interface PatientDocument extends Document {
 }
 
 const PatientSchema: Schema = new Schema<Patient>({
-    owner: { type: String, required: true },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
     organizers: [{
-        type: String, required: true
+        type: Schema.Types.ObjectId,
+        ref: "User",
     }],
     patient: {
-        type: String, required: true
+        type: Schema.Types.ObjectId,
+        ref: "User",
     },
     maintenances: [{
         type: Schema.Types.ObjectId,
         ref: "Maintenance",
     }],
+    status: {
+        type: String,
+        enum: Object.values(Status),
+        default: "ACTIVE"
+    }
 }, {
     timestamps: true
 });
