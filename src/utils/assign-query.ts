@@ -1,11 +1,13 @@
-const assignQuery = (structure: Array<string>, obj: object) => {
+const assignQuery = (structure: string[], obj: object) => {
 
     let query = {};
 
     structure.map((struct: string) => {
         const structHasValue = obj[struct] ? true : false;
         if (structHasValue) {
-            query[struct] = obj[struct]
+            query[struct] = {
+                $regex: obj[struct]
+            }
         }
     });
 

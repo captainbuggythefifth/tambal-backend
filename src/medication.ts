@@ -3,12 +3,12 @@ import {
     APIGatewayProxyResult
 } from "aws-lambda";
 import { StatusCodes } from 'http-status-codes';
-import { Patient } from "./models/patient";
+import { Medication } from './models/medication';
 import { bodyParser } from './utils/body-parser';
 import { validateParameters } from "./utils/validate-parameters";
 import { validateMongooseID } from "./utils/validate-mongoose-id";
 import { lambdaResponse } from "./utils/lambda-response";
-import PatientController from './controllers/patient';
+import MedicationController from './controllers/medication';
 
 import { connect, disconnect } from './connect';
 import { assignDefaultEventQueryStringParameters } from "./utils/assign-default-querystring-parameters";
@@ -17,9 +17,8 @@ import { FindOptions } from "./interfaces/find-options";
 
 connect();
 
-interface PatientFind extends FindOptions {
+interface MedicationFind extends FindOptions {
     owner: string,
-    patient: string,
 }
 
 export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
@@ -27,13 +26,13 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
     // required parameters
     const parameters = [
         'owner',
-        'organizers',
-        'patient',
-        'maintenances',
+        'stocks',
+        'medicines',
+        'schedule'
     ];
 
     // must parse the body. If run locally, event.body is in json format; otherwise it is string
-    const body = bodyParser<Patient>(event);
+    const body = bodyParser<Medication>(event);
 
     // must reject the request if the body is not present
     if (!body) {
@@ -53,37 +52,37 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
         });
     }
 
-    // validate organizers
-    if (!Array.isArray(body.organizers)) {
+    // validate medicines
+    if (!Array.isArray(body.medicines)) {
         return lambdaResponse({
             statusCode: StatusCodes.BAD_REQUEST,
-            message: 'organizers must be array'
+            message: 'medicines must be array'
         });
     }
 
-    // validate organizers
-    if (!Array.isArray(body.maintenances)) {
+    // validate schedule
+    if (!body.schedule.every || !body.schedule.frequency) {
         return lambdaResponse({
             statusCode: StatusCodes.BAD_REQUEST,
-            message: 'maintenances must be array'
+            message: 'schedule must be in { every: string, frequency: number }'
         });
     }
 
-    const maintenance = await PatientController.create(body);
+    const medication = await MedicationController.create(body);
 
     // disconnect();;
 
     return lambdaResponse({
         statusCode: StatusCodes.CREATED,
         message: 'Successfully created',
-        data: maintenance
+        data: medication
     });
 };
 
 export async function find(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
 
     // must assign the default parameters and override if event.queryStringParameters are present
-    const parameters = assignDefaultEventQueryStringParameters(event) as PatientFind;
+    const parameters = assignDefaultEventQueryStringParameters(event) as MedicationFind;
 
     // if parameters.owner has value, we must check if mongoose format Object ID
     if (parameters.owner && parameters.owner !== null) {
@@ -97,26 +96,14 @@ export async function find(event: APIGatewayProxyEvent): Promise<APIGatewayProxy
         }
     }
 
-    // if parameters.patient has value, we must check if mongoose format Object ID
-    if (parameters.patient && parameters.patient !== null) {
-        const isValid = validateMongooseID(parameters.patient);
-
-        if (!isValid) {
-            return lambdaResponse({
-                statusCode: StatusCodes.BAD_REQUEST,
-                message: 'patient is not valid'
-            });
-        }
-    }
-
-    const patients = await PatientController.find(parameters);
+    const medications = await MedicationController.find(parameters);
 
     // disconnect();;
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,
-        message: 'patients',
-        data: patients,
+        message: 'medications',
+        data: medications,
         // data: finalItems,
         page: parameters.page,
         limit: parameters.limit
@@ -145,9 +132,9 @@ export async function findByID(event: APIGatewayProxyEvent): Promise<APIGatewayP
         });
     }
 
-    const patient = await PatientController.findById(id);
+    const medication = await MedicationController.findById(id);
 
-    if (!patient) {
+    if (!medication) {
         return lambdaResponse({
             statusCode: StatusCodes.NOT_FOUND,
             message: 'No match'
@@ -158,8 +145,8 @@ export async function findByID(event: APIGatewayProxyEvent): Promise<APIGatewayP
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,
-        message: 'patient',
-        data: patient,
+        message: 'medication',
+        data: medication,
     });
 };
 
@@ -184,7 +171,7 @@ export async function update(event: APIGatewayProxyEvent): Promise<APIGatewayPro
         });
     }
 
-    const body = bodyParser<Patient>(event);
+    const body = bodyParser<Medication>(event);
 
     // must reject the request if the body is not present
     if (!body) {
@@ -195,16 +182,16 @@ export async function update(event: APIGatewayProxyEvent): Promise<APIGatewayPro
     }
 
     // must validate if the ID passed is legit
-    const paitient = await PatientController.findById(id);
+    const medication = await MedicationController.findById(id);
 
-    if (!paitient) {
+    if (!medication) {
         return lambdaResponse({
             statusCode: StatusCodes.NOT_FOUND,
             message: 'No match'
         });
     }
 
-    const updated = await PatientController.update(id, body);
+    const updated = await MedicationController.update(id, body);
 
     // disconnect();
 

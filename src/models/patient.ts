@@ -1,8 +1,10 @@
 import mongoose, { Schema, Document, Types } from 'mongoose';
 import { Status } from './common';
 import './maintenance';
+import './medication';
 import './user';
 import { MaintenanceDocument } from './maintenance';
+import { MedicationDocument } from './medication';
 import { UserDocument } from './user'
 
 export interface Patient extends PatientDocument {
@@ -10,6 +12,7 @@ export interface Patient extends PatientDocument {
     organizers: UserDocument['_id'][]
     patient: UserDocument['_id'],
     maintenances: MaintenanceDocument['_id'][],
+    medications: MedicationDocument['_id'][],
     status: Status
 }
 
@@ -33,6 +36,10 @@ const PatientSchema: Schema = new Schema<Patient>({
     maintenances: [{
         type: Schema.Types.ObjectId,
         ref: "Maintenance",
+    }],
+    medications: [{
+        type: Schema.Types.ObjectId,
+        ref: "Medication",
     }],
     status: {
         type: String,

@@ -70,7 +70,7 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
     const maintenance = await MaintenanceController.create(body);
 
-    disconnect();
+    // disconnect();;
 
     return lambdaResponse({
         statusCode: StatusCodes.CREATED,
@@ -98,7 +98,7 @@ export async function find(event: APIGatewayProxyEvent): Promise<APIGatewayProxy
 
     const maintenances = await MaintenanceController.find(parameters);
 
-    disconnect();
+    // disconnect();;
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,
@@ -141,7 +141,7 @@ export async function findByID(event: APIGatewayProxyEvent): Promise<APIGatewayP
         });
     }
 
-    disconnect()
+    // disconnect();
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,
@@ -193,7 +193,7 @@ export async function update(event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
     const updated = await MaintenanceController.update(id, body);
 
-    disconnect()
+    // disconnect();
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,

@@ -8,7 +8,6 @@
   "license": "MIT",
   "dependencies": {
     "@types/aws-lambda": "^8.10.64",
-    "@types/http-status-codes": "^1.2.0",
     "@types/jest": "^26.0.15",
     "@types/mongoose": "^5.7.37",
     "@types/node": "^10.17.28",

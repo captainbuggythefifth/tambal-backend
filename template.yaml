@@ -161,6 +161,73 @@ Resources:
 
   # End of Maintenance
 
+  # Start of Medication
+  MedicationGetByIDFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: medication.findByID
+      FunctionName: !Sub "${Stage}-MedicationGetByIDFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Get:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /medication/{id}
+            Method: GET
+            RestApiId: !Ref ApiDeployment
+
+  MedicationCreateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: medication.create
+      FunctionName: !Sub "${Stage}-MedicationCreateFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Post:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /medication
+            Method: POST
+            RestApiId: !Ref ApiDeployment
+
+  MedicationUpdateFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: medication.update
+      FunctionName: !Sub "${Stage}-MedicationUpdateFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Post:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /medication/{id}
+            Method: PUT
+            RestApiId: !Ref ApiDeployment
+
+  MedicationsGetFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: dist/
+      Handler: medication.find
+      FunctionName: !Sub "${Stage}-MedicationsGetFunctionName"
+      Policies:
+        - SecretsManagerReadWrite
+      Events:
+        Get:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /medications
+            Method: GET
+            RestApiId: !Ref ApiDeployment
+
+  # End of Medication
+
   # Start of Patient
   PatientGetByIDFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction

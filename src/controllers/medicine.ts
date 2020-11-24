@@ -1,4 +1,5 @@
 import MedicineModel, { Medicine, MedicineDocument } from './../models/medicine';
+import { assignQuery } from './../utils/assign-query';
 
 interface FindOptions {
   page: number,
@@ -22,23 +23,14 @@ async function create(medicine: Medicine): Promise<MedicineDocument> {
 }
 
 async function find(options: MedicineFindOptions): Promise<MedicineDocument[]> {
-  let query = {
-    owner: options.owner ? options.owner : undefined,
-    genericName: options.genericName ? options.genericName : undefined,
-    brandName: options.brandName ? options.brandName : undefined,
-  };
 
-  if (!query.brandName) {
-    delete query.brandName
-  }
+  const structure = [
+    'owner',
+    'genericName',
+    'brandName'
+  ];
 
-  if (!query.owner) {
-    delete query.owner
-  }
-
-  if (!query.genericName) {
-    delete query.genericName
-  }
+  let query = assignQuery(structure, options)
 
   return await MedicineModel
     .find(query)
@@ -67,32 +59,17 @@ async function findById(id: string): Promise<MedicineDocument | null> {
 
 async function update(_id: string, medicine: Medicine): Promise<MedicineDocument | null> {
 
-  let query = {
-    owner: medicine.owner ? medicine.owner : undefined,
-    genericName: medicine.genericName ? medicine.genericName : undefined,
-    brandName: medicine.brandName ? medicine.brandName : undefined,
-    metrology: medicine.metrology ? medicine.metrology : undefined
-  };
+  const structure = [
+    'owner',
+    'genericName',
+    'brandName',
+    'metrology'
+  ];
 
-  if (!query.brandName) {
-    delete query.brandName
-  }
+  let query = assignQuery(structure, medicine)
 
-  if (!query.owner) {
-    delete query.owner
-  }
+  // const result = await MedicineModel.updateOne({ _id: _id }, { $set: query });
 
-  if (!query.genericName) {
-    delete query.genericName
-  }
-
-  if (!query.metrology) {
-    delete query.metrology
-  }
-
-  const result = await MedicineModel.updateOne({ _id: _id }, { $set: query });
-  console.log("result: ", result);
-  
   return await MedicineModel
     .updateOne({ _id: _id }, { $set: query })
     .then((data: MedicineDocument | null) => {

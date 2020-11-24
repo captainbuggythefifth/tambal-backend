@@ -54,7 +54,7 @@ export async function create(event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
     const medicine = await MedicineController.create(body);
     
-    disconnect();
+    // disconnect();;
 
     return lambdaResponse({
         statusCode: StatusCodes.CREATED,
@@ -82,7 +82,7 @@ export async function find(event: APIGatewayProxyEvent): Promise<APIGatewayProxy
 
     const medicines = await MedicineController.find(parameters);
 
-    disconnect();
+    // disconnect();;
 
     return lambdaResponse({
         statusCode: StatusCodes.OK,
@@ -117,7 +117,7 @@ export async function findByID(event: APIGatewayProxyEvent): Promise<APIGatewayP
 
     const medicine = await MedicineController.findById(id);
 
-    disconnect();
+    // disconnect();;
 
     if (!medicine) {
         return lambdaResponse({
@@ -175,7 +175,7 @@ export async function update(event: APIGatewayProxyEvent): Promise<APIGatewayPro
 
     const updated = await MedicineController.update(id, body);
 
-    disconnect();
+    // disconnect();;
     
     return lambdaResponse({
         statusCode: StatusCodes.OK,

@@ -35,7 +35,7 @@ const connect = () => {
 };
 
 const disconnect = () => {
-    mongoose.disconnect()
+    mongoose.disconnect();
 }
 
 export {
